@@ -184,3 +184,79 @@ def updateToday(nutritionConsumed):
     except Exception as e:
         print(f"An error occurred while writing: {e}")
 
+def newDay(currentDate, nutritionConsumed):
+    """
+    Handles all "new day" operations and archives the previous day's data.
+
+    This function is called when a new day is detected. It performs two
+    main jobs:
+    1.  **Archives:** It takes the *previous* day's totals (which it reads
+        from 'currentDay.json') and saves them into the 'avg.json' file.
+    2.  **Resets:** It updates 'currentDay.json' with the new date and
+        populates its 'dailyTotals' with the 'nutritionConsumed' value
+        passed to it (which is the first meal of the new day).
+
+    This function uses a 1-based indexing system (Day 1 is '1', not '0').
+    It also calculates and saves the weekly/monthly average when the
+    respective counters are full.
+
+    Parameters:
+        currentDate (str): The date string for the new day (e.g., "2025-11-14").
+        nutritionConsumed (list): A list of 5 floats representing the
+                                  *first* nutritional log of the new day.
+
+    Returns:
+        None
+    """
+    currentDay = 'currentDay.json'
+    avg = 'avg.json'
+    try:
+        with open(currentDay, 'r', encoding='utf-8') as file: # Fixed 'utf' to 'utf-8'
+            currentDayData = json.load(file)
+
+        with open(avg, 'r', encoding='utf-8') as file: # Fixed 'utf' to 'utf-8'
+            avgData = json.load(file)
+    except FileNotFoundError:
+        print(f"🚨 Error: The file  was not found.")
+        return
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return
+
+    currentDayData['date'] = currentDate
+    pastDailyTotal = currentDayData['dailyTotals']
+    currentDayData['dailyTotals'] = nutritionConsumed
+
+    if avgData['daysOfWeek'] > 7:
+        avgData['daysOfWeek'] = 1
+        weeklyAvg = [0.0, 0.0, 0.0, 0.0, 0.0]
+        for i in range(5):
+            for j in range(7):
+                weeklyAvg[i] += avgData['nutritionWeekly'][j][i]
+                avgData['nutritionWeekly'][j][i] = 0.0
+            weeklyAvg[i] /= 7
+        avgData['lastWeeklyAvg'] = weeklyAvg
+    avgData['nutritionWeekly'][avgData['daysOfWeek'] - 1] = pastDailyTotal
+    avgData['daysOfWeek'] += 1
+
+    if avgData['daysOfMonth'] > 30:
+        avgData['daysOfMonth'] = 1
+        monthlyAvg = [0.0, 0.0, 0.0, 0.0, 0.0]
+        for i in range(5):
+            for j in range(30):
+                monthlyAvg[i] += avgData['nutritionMonthly'][j][i]
+                avgData['nutritionMonthly'][j][i] = 0.0
+            monthlyAvg[i] /= 30
+    avgData['nutritionMonthly'][avgData['daysOfMonth'] - 1] = pastDailyTotal
+    avgData['daysOfMonth'] += 1
+
+    try:
+        with open(currentDay, 'w', encoding='utf-8') as file:
+            json.dump(currentDayData, file, indent=4)
+        with open(avg, 'w', encoding='utf-8') as file:
+            json.dump(avgData, file, indent=4)
+        print("✅ Successfully updated today's totals.")
+    except Exception as e:
+        print(f"An error occurred while writing: {e}")
+
+
