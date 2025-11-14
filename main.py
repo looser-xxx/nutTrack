@@ -105,3 +105,35 @@ def nutritionConsumed(meals, foodData):
 
     return nutritionConsumed
 
+def isSameDay(currentDay):
+    """
+    Checks if the provided date matches the date stored in 'currentDay.json'.
+
+    This function reads the 'currentDay.json' file, extracts the value
+    from the 'date' key, and compares it to the 'currentDay' parameter.
+    It handles FileNotFoundError and other exceptions gracefully by
+    returning False.
+
+    Parameters:
+        currentDay (str): The current date string to check (e.g., "2025-11-14").
+
+    Returns:
+        (bool): True if the dates match, False otherwise (including if the
+                file is not found or an error occurs).
+    """
+    fileName = 'currentDay.json'
+    try:
+        # Open the JSON file in 'read' mode
+        with open(fileName, 'r', encoding='utf-8') as file:
+            loadedData = json.load(file)
+            lastContent = loadedData['date']
+            if currentDay == lastContent.strip():
+                return True
+
+    except FileNotFoundError:
+        print(f"🚨 Error: The file '{fileName}' was not found.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+    return False
+
