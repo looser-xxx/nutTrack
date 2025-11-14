@@ -137,3 +137,50 @@ def isSameDay(currentDay):
 
     return False
 
+def updateToday(nutritionConsumed):
+    """
+    Updates the 'currentDay.json' file with newly consumed nutrition.
+
+    This function first READS the current totals from 'currentDay.json'.
+    It then adds the new 'nutritionConsumed' values to the existing totals
+    in memory. Finally, it over-writes the 'currentDay.json' file
+    with the updated data.
+
+    If the file is not found or a read error occurs, the function
+    will print an error and stop, preventing a crash.
+
+    Parameters:
+        nutritionConsumed (list): A list of 5 floats with the
+                                  nutrition totals to be added.
+
+    Returns:
+        None
+    """
+    fileName = 'currentDay.json'
+
+    try:
+        with open(fileName, 'r', encoding='utf-8') as file:
+            loadedData = json.load(file)
+
+    except FileNotFoundError:
+        print(f"🚨 Error: The file '{fileName}' was not found.")
+        return
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return
+
+    previousNutrition = loadedData['dailyTotals']
+    newData = []
+
+    for i in range(5):
+        newData.append(nutritionConsumed[i] + previousNutrition[i])
+
+    loadedData['dailyTotals'] = newData
+
+    try:
+        with open(fileName, 'w', encoding='utf-8') as file:
+            json.dump(loadedData, file, indent=4)
+        print("✅ Successfully updated today's totals.")
+    except Exception as e:
+        print(f"An error occurred while writing: {e}")
+
