@@ -38,3 +38,35 @@ def getData():
     except FileNotFoundError:
         print("🚨 Error: 'food.csv' not found. Please ensure the file exists.")
         return {}
+
+
+
+def getInput():
+    """
+    Gets meal input from the user in a continuous loop.
+
+    This function repeatedly asks the user for a food item and an
+    amount (in grams/units). The loop breaks when the user types 'exit'.
+    It includes error handling to ensure the amount is a valid number.
+
+    Parameters:
+        None
+
+    Returns:
+        meals (list): A list of tuples, where each tuple is (foodName, amount).
+                      e.g., [('Apple', 150.0), ('Banana', 100.0)]
+    """
+    meals = []
+    while True:
+        tempFood = input("What did you have: ")
+        if tempFood.lower() == 'exit':
+            break
+
+        try:
+            tempAmount = float(input("How much of it (in grams/units): "))
+            meals.append((tempFood, tempAmount))
+
+        except ValueError:
+            print("🚨 Invalid amount entered. Please enter a number.")
+            continue
+    return meals
