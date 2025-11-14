@@ -70,3 +70,38 @@ def getInput():
             print("🚨 Invalid amount entered. Please enter a number.")
             continue
     return meals
+
+def nutritionConsumed(meals, foodData):
+    """
+    Calculates the total nutrition consumed from a list of meals.
+
+    This function takes a list of meals (food, amount) and a dictionary
+    of food data. It loops through each meal, finds the nutrition data,
+    multiplies it by the amount, and adds it to a running total.
+    It safely skips any food not found in the foodData dictionary.
+
+    Parameters:
+        meals (list): A list of tuples, where each tuple is (foodName, amount).
+                      e.g., [('Apple', 150.0), ('Banana', 100.0)]
+        foodData (dict): A dictionary from getData(), where keys are food names
+                         and values are lists of nutrient values.
+
+    Returns:
+        nutritionConsumed (list): A list of 5 floats representing the
+                                  sum of each nutrient.
+    """
+    nutritionConsumed = [0, 0, 0, 0, 0]
+    for meal in meals:
+        nutritionPerGram = foodData.get(meal[0])
+
+        i = 0
+        if nutritionPerGram:
+            for values in nutritionPerGram:
+                values = values * meal[1]
+                nutritionConsumed[i] += values
+                i += 1
+        else:
+            print(f"⚠️ Warning: Food '{meal[0]}' not found in data. Skipping.")
+
+    return nutritionConsumed
+
