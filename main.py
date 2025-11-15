@@ -71,7 +71,7 @@ def getInput():
             continue
     return meals
 
-def nutritionConsumed(meals, foodData):
+def nutritionConsumedThisMeal(meals, foodData):
     """
     Calculates the total nutrition consumed from a list of meals.
 
@@ -258,5 +258,88 @@ def newDay(currentDate, nutritionConsumed):
         print("✅ Successfully updated today's totals.")
     except Exception as e:
         print(f"An error occurred while writing: {e}")
+
+
+def main():
+    """
+    The main entry point for the nutrition tracker application.
+
+    This function controls the primary flow of the program:
+    1.  It loads the master food data from 'food.csv' via getData().
+        (It will stop if 'food.csv' is not found or empty).
+    2.  It prompts the user to enter their meals via getInput().
+        (It will stop if no meals are entered).
+    3.  It calculates the nutrition for the meals just entered.
+    4.  It checks if the current date is the same as the last-logged date
+        using isSameDay().
+    5.  Based on the date check, it either:
+        - Calls updateToday() to add to the current day's totals.
+        - Calls newDay() to archive the previous day and start a new log.
+
+    Parameters:
+        None
+
+    Returns:
+        None
+    """
+    print("---------------------------------")
+    print("🍎 Welcome to nutTrack! 🍎")
+    print("---------------------------------")
+
+    foodData = getData()
+    if not foodData:
+        print("Exiting. Cannot run program without food.csv.")
+        return
+
+    meals = getInput()
+    if not meals:
+        print("\nNo meals entered. Exiting now.")
+        print("Thank you for using nutTrack!")
+        return
+
+    print("\nCalculating nutrition...")
+    nutritionConsumed = nutritionConsumedThisMeal(meals, foodData)
+    print("Calculation complete.")
+
+    rightNow = datetime.now()
+    todayDateStr = str(rightNow.date())
+
+    if isSameDay(todayDateStr):
+        print("Logging meals for today...")
+        updateToday(nutritionConsumed)
+    else:
+        print("It's a new day! Archiving yesterday and logging new meal...")
+        newDay(todayDateStr, nutritionConsumed)
+
+    print("\n---------------------------------")
+    print("All done. Thank you for using nutTrack!")
+    print("---------------------------------")
+
+
+if __name__ == '__main__':
+    main()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
