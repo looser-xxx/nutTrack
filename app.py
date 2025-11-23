@@ -1,6 +1,9 @@
 import csv
 from datetime import datetime
 import json
+from flask import Flask, render_template, jsonify, request
+
+
 
 
 def getData():
@@ -315,9 +318,14 @@ def main():
     print("All done. Thank you for using nutTrack!")
     print("---------------------------------")
 
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return render_template('index.html')
 
 if __name__ == '__main__':
-    main()
+    app.run(host='0.0.0.0', port=5000, debug=True)
 
 
 
