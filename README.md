@@ -106,4 +106,4 @@ Contributions are welcome! Feel free to open issues or submit pull requests.
 
 ## ⚠️ Note on Development
 
-This project utilizes a **Large Language Model (LLM)** to assist in the design and implementation of the **Frontend UI only** (HTML, CSS, JavaScript). The **Backend logic** (Python/Flask) is currently a work in progress and will be developed independently, without reliance on LLM generation, to ensure manual control and deep understanding of the core logic.
+This project utilizes a **Large Language Model (LLM)** to assist in the design and implementation of the **Frontend UI only** (HTML, CSS, JavaScript). The **Backend logic** (Python/Flask) is developed manually to ensure deep control and understanding. However, LLMs are employed to generate high-quality **code comments and documentation** across the entire codebase.
