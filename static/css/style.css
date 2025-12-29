@@ -715,6 +715,12 @@ body {
     transition: background-color 0.3s ease;
 }
 
+#todaysMealsHeader, #statsHeaderId {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
 #todaysMealsHeader {
     margin-bottom: 20px;
 }
