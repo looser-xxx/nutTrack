@@ -113,13 +113,77 @@ body {
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 2px 5px rgba(0,0,0,0.03);
-    transition: transform 0.1s ease, background-color 0.1s ease;
+    transition: background-color 0.1s ease;
     cursor: pointer;
+    position: relative;
+    z-index: 2;
 }
 
 .mealItem:active {
-    transform: scale(0.98);
     background-color: #f0f0f0;
+}
+
+/* Expanded state for Today's Meals list */
+.mealItem.expanded {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    margin-bottom: 0; /* Attach to details */
+    background-color: #e8f5e9; /* Light green highlight */
+}
+
+.mealDetails {
+    background-color: #f8f9fa;
+    margin-bottom: 12px;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.02), 0 2px 5px rgba(0,0,0,0.03);
+    overflow: hidden;
+    
+    /* Slide Down Effect */
+    max-height: 0;
+    padding: 0 20px;
+    transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+}
+
+.mealDetails:not(.hiddenView) {
+    max-height: 300px; /* Large enough to fit content */
+    padding: 15px 20px;
+    animation: slideDown 0.3s ease-out forwards;
+}
+
+@keyframes slideDown {
+    from { 
+        opacity: 0; 
+        transform: translateY(-10px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+.detailGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.detailItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.dLabel {
+    font-size: 0.7rem;
+    color: #888;
+    text-transform: uppercase;
+}
+
+.dVal {
+    font-weight: bold;
+    color: #3f7d69;
+    font-size: 0.95rem;
 }
 
 .mealInfo {
@@ -309,6 +373,32 @@ body {
     color: #999;
 }
 
+/* Mini Progress Bar for Nutrients */
+.miniTrack {
+    width: 80%; /* Width within the card */
+    height: 6px;
+    background-color: #e0e0e0;
+    border-radius: 3px;
+    margin-top: 8px;
+    overflow: hidden;
+}
+
+.miniFill {
+    height: 100%;
+    background-color: #3f7d69;
+    width: 0; /* Animated by JS */
+    transition: width 1s cubic-bezier(0.22, 1, 0.36, 1);
+    border-radius: 3px;
+}
+
+/* Specific color tweaks if desired */
+#fillCalories { background-color: #3f7d69; }
+#fillProtein { background-color: #3498db; }
+#fillCarbs { background-color: #f39c12; }
+#fillFat { background-color: #e74c3c; }
+#fillFiber { background-color: #27ae60; }
+
+
 .closeBtn {
     width: 100%;
     padding: 15px;
@@ -322,7 +412,6 @@ body {
 }
 
 .closeBtn:active {
-    transform: scale(0.97);
     background-color: #2a5a4b;
 }
 
@@ -541,6 +630,10 @@ body {
     box-shadow: 0 2px 10px rgba(0,0,0,0.02);
 }
 
+#todaysMealsHeader {
+    margin-bottom: 20px;
+}
+
 .statsHeader h3 {
     font-size: 1.2rem;
     color: #3f7d69;
@@ -584,12 +677,53 @@ body {
     padding: 0 20px 20px 20px;
 }
 
-.chartSection, .avgSection {
+.chartSection, .avgSection, .insightsSection {
     background-color: white;
     border-radius: 20px;
     padding: 20px;
     margin-bottom: 20px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+}
+
+.insightsSection {
+    background-color: #fffdf0; /* Soft warm yellow */
+    border-left: 5px solid #f1c40f; /* Accent color */
+}
+
+.insightsHeader {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.insightsHeader h4 {
+    margin: 0;
+    color: #856404;
+    font-size: 0.95rem;
+}
+
+#insightText {
+    font-size: 0.85rem;
+    color: #666;
+    line-height: 1.5;
+    font-style: italic;
+    display: inline;
+}
+
+.cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1em;
+    background-color: #f1c40f;
+    margin-left: 2px;
+    vertical-align: middle;
+    animation: blink 0.7s infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
 }
 
 .chartSection h4, .avgSection h4 {
@@ -614,29 +748,119 @@ body {
     background-color: #3f7d69;
     border-radius: 5px 5px 0 0;
     opacity: 0.8;
+    /* Animation setup */
+    transform-origin: bottom;
+    transform: scaleY(0); /* Start hidden */
 }
 
-.avgTable {
+.bar.animate {
+    animation: growBar 0.6s ease-out forwards;
+}
+
+@keyframes growBar {
+    from { transform: scaleY(0); }
+    to { transform: scaleY(1); }
+}
+
+/* Goals / Progress Bars */
+.goalList {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.goalItem {
     width: 100%;
-    border-collapse: collapse;
 }
 
-.avgTable th {
-    text-align: left;
-    color: #999;
-    font-size: 0.85rem;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #f0f0f0;
+.goalHeader {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
 }
 
-.avgTable td {
-    padding: 15px 0;
-    font-size: 0.95rem;
+.goalLabel {
     color: #333;
-    border-bottom: 1px solid #f9f9f9;
+    font-weight: bold;
 }
 
-.avgTable td:last-child {
+.goalNumbers {
     color: #666;
     font-size: 0.85rem;
+}
+
+.goalTrack {
+    width: 100%;
+    height: 12px;
+    background-color: #e8f5e9;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.goalFill {
+    height: 100%;
+    background-color: #3f7d69;
+    border-radius: 6px;
+    width: 0; /* JS will animate this */
+    transition: width 1s cubic-bezier(0.22, 1, 0.36, 1); /* Smooth easing */
+}
+
+/* SIDE MENU STYLES */
+.sideMenu {
+    background-color: white;
+    width: 70%; /* 70% of screen width */
+    height: 100%;
+    box-shadow: -5px 0 20px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    animation: slideInRight 0.3s ease-out forwards;
+}
+
+@keyframes slideInRight {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+}
+
+.menuHeader {
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+}
+
+.menuHeader h3 {
+    font-size: 1.2rem;
+    color: #3f7d69;
+}
+
+.menuList {
+    list-style: none;
+    padding: 20px;
+}
+
+.menuList .menuItem {
+    padding: 15px 0;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: #333;
+    border-bottom: 1px solid #f9f9f9;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.menuList .menuItem:active {
+    background-color: #f0f7f4;
+}
+
+.menuIcon {
+    font-size: 1.2rem;
+}
+
+/* Ensure the overlay for menu is specifically right-aligned */
+#menuOverlay {
+    justify-content: flex-end;
 }

@@ -14,12 +14,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const statsContainer = document.getElementById('statsContainer');
     const closeStatsBtn = document.getElementById('closeStats');
     const tabBtns = document.querySelectorAll('.tabBtn');
+    const chartBars = document.querySelectorAll('.bar');
+    const goalFills = document.querySelectorAll('.goalFill');
+    const countUpElements = document.querySelectorAll('.countUp');
+    const insightText = document.getElementById('insightText');
 
     // Workout Elements
     const navWorkout = document.getElementById('navWorkout');
     const workoutContainer = document.getElementById('workoutContainer');
     const closeWorkoutBtn = document.getElementById('closeWorkout');
     const workoutForm = document.getElementById('workoutForm');
+
+    // Today's Meals Elements
+    const viewAllMealsBtn = document.getElementById('viewAllMealsBtn');
+    const todaysMealsContainer = document.getElementById('todaysMealsContainer');
+    const closeTodaysMealsBtn = document.getElementById('closeTodaysMeals');
+    const todaysMealList = document.getElementById('todaysMealList');
+
 
     // Search Elements
     const foodSearch = document.getElementById('foodSearch');
@@ -38,8 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const infoCarb = document.getElementById('infoCarb');
     const infoFat = document.getElementById('infoFat');
 
-    // --- Mock Data (Ideally fetched from backend) ---
-    // Format: name: [calories, protein, carbs, fat, fiber] (per 100g)
+    // --- Mock Data ---
     const foodDatabase = [
         { name: "Apple", nutrients: [52, 0.3, 14, 0.2, 2.4] },
         { name: "Banana", nutrients: [89, 1.1, 23, 0.3, 2.6] },
@@ -53,15 +63,145 @@ document.addEventListener('DOMContentLoaded', () => {
         { name: "Greek Yogurt", nutrients: [59, 10, 3.6, 0.4, 0] }
     ];
 
+    let typingTimer = null;
+
     // --- Helper Functions ---
 
     const toggleModal = (modal, show) => {
         if (show) {
             modal.classList.remove('hiddenView');
+            // Trigger specific actions when opening
+            if (modal === statsContainer) {
+                playStatsAnimation();
+            }
+            if (modal === modalNutrients) {
+                // Animate Nutrients Numbers & Bars
+                // Mock daily totals for demo:
+                const targets = {
+                    'valCalories': 1250,
+                    'valProtein': 85,
+                    'valCarbs': 140,
+                    'valFat': 45,
+                    'valFiber': 22
+                };
+                
+                // Hardcoded goals matching HTML text
+                const goals = {
+                    'valCalories': 2500,
+                    'valProtein': 180,
+                    'valCarbs': 300,
+                    'valFat': 80,
+                    'valFiber': 35
+                };
+
+                // Reset bars first
+                Object.keys(targets).forEach(id => {
+                    const fillId = id.replace('val', 'fill');
+                    const fillEl = document.getElementById(fillId);
+                    if(fillEl) fillEl.style.width = '0%';
+                });
+
+                setTimeout(() => {
+                    Object.keys(targets).forEach(id => {
+                        // Animate Number
+                        const el = document.getElementById(id);
+                        if (el) {
+                            animateValue(el, 0, targets[id], 1000);
+                        }
+                        
+                        // Animate Bar
+                        const fillId = id.replace('val', 'fill');
+                        const fillEl = document.getElementById(fillId);
+                        if (fillEl) {
+                            const pct = Math.min((targets[id] / goals[id]) * 100, 100);
+                            fillEl.style.width = pct + '%';
+                        }
+                    });
+                }, 50);
+            }
         } else {
             modal.classList.add('hiddenView');
+            // Reset animations when closing to allow re-play
+            if (modal === statsContainer) {
+                resetStatsAnimation();
+            }
         }
     };
+
+    // --- Animation Logic ---
+
+    const resetStatsAnimation = () => {
+        chartBars.forEach(bar => {
+            bar.classList.remove('animate');
+            void bar.offsetWidth; 
+        });
+        goalFills.forEach(fill => {
+            fill.style.width = '0%';
+        });
+        countUpElements.forEach(el => {
+            el.textContent = '0';
+        });
+        if (typingTimer) clearTimeout(typingTimer);
+        insightText.innerHTML = '';
+    };
+
+    const playStatsAnimation = () => {
+        resetStatsAnimation();
+        
+        setTimeout(() => {
+            chartBars.forEach((bar) => {
+                bar.classList.add('animate');
+            });
+
+            goalFills.forEach(fill => {
+                const width = fill.getAttribute('data-width');
+                fill.style.width = width;
+            });
+
+            countUpElements.forEach(el => {
+                const target = parseInt(el.getAttribute('data-target'));
+                animateValue(el, 0, target, 1000);
+            });
+
+            const mockInsight = "Based on your recent patterns, you're doing great with protein! Consider increasing your fiber intake during breakfast to maintain steady energy levels throughout the afternoon.";
+            typeWriter(mockInsight, insightText, 30); // 30ms per char
+        }, 50);
+    };
+
+    const animateValue = (obj, start, end, duration) => {
+        let startTimestamp = null;
+        const step = (timestamp) => {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+            obj.innerHTML = Math.floor(progress * (end - start) + start).toLocaleString();
+            if (progress < 1) {
+                window.requestAnimationFrame(step);
+            }
+        };
+        window.requestAnimationFrame(step);
+    };
+
+    const typeWriter = (text, element, speed) => {
+        element.innerHTML = '';
+        let i = 0;
+        
+        // Add cursor
+        const cursor = document.createElement('span');
+        cursor.className = 'cursor';
+        
+        const type = () => {
+            if (i < text.length) {
+                // Insert text before the cursor
+                element.innerHTML = text.substring(0, i + 1);
+                element.appendChild(cursor);
+                i++;
+                typingTimer = setTimeout(type, speed);
+            }
+        };
+        
+        type();
+    };
+
 
     const updateNutritionDisplay = (nutrients) => {
         if (!nutrients) {
@@ -71,7 +211,6 @@ document.addEventListener('DOMContentLoaded', () => {
             infoFat.textContent = '-';
             return;
         }
-        // [Cal, Pro, Carb, Fat, Fiber]
         infoCal.textContent = nutrients[0];
         infoPro.textContent = nutrients[1];
         infoCarb.textContent = nutrients[2];
@@ -79,8 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const renderFoodList = (foods) => {
-        foodListContainer.innerHTML = ''; // Clear current list
-
+        foodListContainer.innerHTML = '';
         if (foods.length === 0) {
             const noResult = document.createElement('div');
             noResult.className = 'foodOption';
@@ -90,113 +228,104 @@ document.addEventListener('DOMContentLoaded', () => {
             foodListContainer.appendChild(noResult);
             return;
         }
-
-        // Sort alphabetically
         foods.sort((a, b) => a.name.localeCompare(b.name));
-
         foods.forEach(food => {
             const div = document.createElement('div');
             div.className = 'foodOption';
             div.textContent = food.name;
-            
-            // Check if currently selected
-            if (food.name === selectedFoodInput.value) {
-                div.classList.add('selected');
-            }
-
+            if (food.name === selectedFoodInput.value) div.classList.add('selected');
             div.addEventListener('click', () => {
-                // Select this food
                 selectedFoodInput.value = food.name;
                 foodSearch.value = food.name;
                 updateNutritionDisplay(food.nutrients);
-                
-                // Hide list after selection
                 foodListContainer.classList.remove('active');
-                
-                // Show clear button since input has value
                 clearSearchBtn.classList.remove('hiddenView');
             });
-
             foodListContainer.appendChild(div);
         });
-        
         foodListContainer.classList.add('active');
     };
 
     // --- Event Listeners ---
+    
+    // Accordion Logic for Today's Meals
+    if (todaysMealList) {
+        todaysMealList.addEventListener('click', (e) => {
+            const item = e.target.closest('.expandable');
+            if (!item) return;
 
-    // 1. Search Input Logic
+            const targetId = item.getAttribute('data-details');
+            const targetDetails = document.getElementById(targetId);
+
+            // Close all others
+            const allItems = todaysMealList.querySelectorAll('.expandable');
+            const allDetails = todaysMealList.querySelectorAll('.mealDetails');
+
+            allItems.forEach(i => {
+                if (i !== item) i.classList.remove('expanded');
+            });
+            allDetails.forEach(d => {
+                if (d !== targetDetails) d.classList.add('hiddenView');
+            });
+
+            // Toggle current
+            item.classList.toggle('expanded');
+            targetDetails.classList.toggle('hiddenView');
+        });
+    }
+
+
     if (foodSearch) {
         const showFilteredList = () => {
             const query = foodSearch.value.toLowerCase();
-            const filtered = foodDatabase.filter(food => 
-                food.name.toLowerCase().includes(query)
-            );
+            const filtered = foodDatabase.filter(food => food.name.toLowerCase().includes(query));
             renderFoodList(filtered);
-            
-            if (query.length > 0) {
-                clearSearchBtn.classList.remove('hiddenView');
-            } else {
-                clearSearchBtn.classList.add('hiddenView');
-            }
+            if (query.length > 0) clearSearchBtn.classList.remove('hiddenView');
+            else clearSearchBtn.classList.add('hiddenView');
         };
-
         foodSearch.addEventListener('input', showFilteredList);
-
-        // Show full list when focusing or clicking
         foodSearch.addEventListener('focus', showFilteredList);
         foodSearch.addEventListener('click', showFilteredList);
     }
 
-    // 2. Clear Button Logic
     if (clearSearchBtn) {
         clearSearchBtn.addEventListener('click', () => {
             foodSearch.value = '';
             selectedFoodInput.value = '';
             clearSearchBtn.classList.add('hiddenView');
             updateNutritionDisplay(null);
-            renderFoodList(foodDatabase); // Reset to full list
+            renderFoodList(foodDatabase);
             foodSearch.focus();
         });
     }
 
-    // 3. Close search list when clicking outside
     document.addEventListener('click', (e) => {
         if (!foodSearch.contains(e.target) && !foodListContainer.contains(e.target) && e.target !== clearSearchBtn) {
             foodListContainer.classList.remove('active');
         }
     });
 
-    // 4. Quantity Stepper Logic
     if (qtyDec && qtyInc && foodQuantity) {
         qtyDec.addEventListener('click', () => {
             let currentVal = parseInt(foodQuantity.value) || 0;
-            if (currentVal > 0) {
-                foodQuantity.value = Math.max(0, currentVal - 10);
-            }
+            if (currentVal > 0) foodQuantity.value = Math.max(0, currentVal - 10);
         });
-
         qtyInc.addEventListener('click', () => {
             let currentVal = parseInt(foodQuantity.value) || 0;
             foodQuantity.value = currentVal + 10;
         });
     }
 
-    // 5. Tabs Logic
     if (tabBtns.length > 0) {
         tabBtns.forEach(btn => {
             btn.addEventListener('click', () => {
-                // Remove active class from all
                 tabBtns.forEach(b => b.classList.remove('active'));
-                // Add to clicked
                 btn.classList.add('active');
-                // TODO: Switch chart/table data based on btn.dataset.tab (weekly/monthly)
+                playStatsAnimation();
             });
         });
     }
 
-
-    // --- Modal Toggles ---
     if (todayMain) todayMain.addEventListener('click', () => toggleModal(modalNutrients, true));
     if (closeNutrientsBtn) closeNutrientsBtn.addEventListener('click', () => toggleModal(modalNutrients, false));
     if (modalNutrients) modalNutrients.addEventListener('click', (e) => { if (e.target === modalNutrients) toggleModal(modalNutrients, false); });
@@ -205,19 +334,41 @@ document.addEventListener('DOMContentLoaded', () => {
     if (closeAddMealBtn) closeAddMealBtn.addEventListener('click', () => toggleModal(addMealModal, false));
     if (addMealModal) addMealModal.addEventListener('click', (e) => { if (e.target === addMealModal) toggleModal(addMealModal, false); });
 
-    // Stats Modal
     if (navStats) navStats.addEventListener('click', () => toggleModal(statsContainer, true));
     if (closeStatsBtn) closeStatsBtn.addEventListener('click', () => toggleModal(statsContainer, false));
 
-    // Workout Modal
     if (navWorkout) navWorkout.addEventListener('click', () => toggleModal(workoutContainer, true));
     if (closeWorkoutBtn) closeWorkoutBtn.addEventListener('click', () => toggleModal(workoutContainer, false));
 
-    // Form Submissions
+    // Today's Meals Toggle
+    if (viewAllMealsBtn) viewAllMealsBtn.addEventListener('click', () => toggleModal(todaysMealsContainer, true));
+    if (closeTodaysMealsBtn) closeTodaysMealsBtn.addEventListener('click', () => toggleModal(todaysMealsContainer, false));
+
+    // Side Menu Toggle
+    const menuBtn = document.getElementById('menuBtn');
+    const menuOverlay = document.getElementById('menuOverlay');
+    const closeMenuBtn = document.getElementById('closeMenu');
+
+    if (menuBtn) {
+        menuBtn.addEventListener('click', () => toggleModal(menuOverlay, true));
+    }
+
+    if (closeMenuBtn) {
+        closeMenuBtn.addEventListener('click', () => toggleModal(menuOverlay, false));
+    }
+
+    if (menuOverlay) {
+        menuOverlay.addEventListener('click', (e) => {
+            if (e.target === menuOverlay) {
+                toggleModal(menuOverlay, false);
+            }
+        });
+    }
+
+
     if (addMealForm) {
         addMealForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            console.log(`Submitted Meal: Food=${selectedFoodInput.value}, Qty=${foodQuantity.value}`);
             toggleModal(addMealModal, false);
         });
     }
@@ -225,12 +376,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (workoutForm) {
         workoutForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            const exercise = document.getElementById('exerciseName').value;
-            const sets = document.getElementById('sets').value;
-            const reps = document.getElementById('reps').value;
-            const weight = document.getElementById('weight').value;
-            console.log(`Submitted Workout: ${exercise} - ${sets}x${reps} @ ${weight}kg`);
-            // TODO: Add to list
         });
     }
 });

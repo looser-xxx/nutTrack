@@ -31,7 +31,13 @@
 <div class="appContainer">
     <header class="appHeader">
         <h2>NutTracker</h2>
-        <span class="dateDisplay">Today</span>
+        <button id="menuBtn" class="iconBtn" style="color: #333;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 12H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M3 6H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M3 18H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </button>
     </header>
 
     <main class="contentArea">
@@ -44,8 +50,8 @@
         </div>
 
         <div class="sectionHeader">
-            <h3>Recent Meals</h3>
-            <a href="#" class="viewAll">View All</a>
+            <h3>Today's Meals</h3>
+            <button id="viewAllMealsBtn" class="viewAll" style="background:none; border:none; cursor:pointer;">View All</button>
         </div>
 
         <ul class="mealList">
@@ -105,6 +111,76 @@
     </nav>
 </div>
 
+<!-- Modal Container for Full Meal List -->
+<div id="todaysMealsContainer" class="modalOverlay hiddenView">
+    <div class="statsView">
+        <header id="todaysMealsHeader" class="statsHeader">
+            <h3>Today's Meals</h3>
+            <button id="closeTodaysMeals" class="iconBtn">&times;</button>
+        </header>
+        <div class="statsContent">
+            <ul class="mealList" id="todaysMealList">
+                <!-- Oatmeal -->
+                <li>
+                    <div class="mealItem expandable" data-details="details-1">
+                        <div class="mealInfo">
+                            <span class="mealName">Oatmeal & Berries</span>
+                        </div>
+                        <span class="mealCals">150g</span>
+                    </div>
+                    <div id="details-1" class="mealDetails hiddenView">
+                        <div class="detailGrid">
+                            <div class="detailItem"><span class="dLabel">Calories</span><span class="dVal">350</span></div>
+                            <div class="detailItem"><span class="dLabel">Protein</span><span class="dVal">12g</span></div>
+                            <div class="detailItem"><span class="dLabel">Carbs</span><span class="dVal">45g</span></div>
+                            <div class="detailItem"><span class="dLabel">Fat</span><span class="dVal">6g</span></div>
+                            <div class="detailItem"><span class="dLabel">Fiber</span><span class="dVal">8g</span></div>
+                        </div>
+                    </div>
+                </li>
+
+                <!-- Chicken Salad -->
+                <li>
+                    <div class="mealItem expandable" data-details="details-2">
+                        <div class="mealInfo">
+                            <span class="mealName">Grilled Chicken Salad</span>
+                        </div>
+                        <span class="mealCals">300g</span>
+                    </div>
+                    <div id="details-2" class="mealDetails hiddenView">
+                        <div class="detailGrid">
+                            <div class="detailItem"><span class="dLabel">Calories</span><span class="dVal">450</span></div>
+                            <div class="detailItem"><span class="dLabel">Protein</span><span class="dVal">40g</span></div>
+                            <div class="detailItem"><span class="dLabel">Carbs</span><span class="dVal">12g</span></div>
+                            <div class="detailItem"><span class="dLabel">Fat</span><span class="dVal">20g</span></div>
+                            <div class="detailItem"><span class="dLabel">Fiber</span><span class="dVal">5g</span></div>
+                        </div>
+                    </div>
+                </li>
+
+                 <!-- Apple -->
+                <li>
+                    <div class="mealItem expandable" data-details="details-3">
+                        <div class="mealInfo">
+                            <span class="mealName">Apple</span>
+                        </div>
+                        <span class="mealCals">120g</span>
+                    </div>
+                    <div id="details-3" class="mealDetails hiddenView">
+                        <div class="detailGrid">
+                            <div class="detailItem"><span class="dLabel">Calories</span><span class="dVal">95</span></div>
+                            <div class="detailItem"><span class="dLabel">Protein</span><span class="dVal">0.5g</span></div>
+                            <div class="detailItem"><span class="dLabel">Carbs</span><span class="dVal">25g</span></div>
+                            <div class="detailItem"><span class="dLabel">Fat</span><span class="dVal">0.3g</span></div>
+                            <div class="detailItem"><span class="dLabel">Fiber</span><span class="dVal">4g</span></div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
 <div id="workoutContainer" class="modalOverlay hiddenView">
     <div class="statsView"> <!-- Reusing stats view container for full screen -->
         <header class="statsHeader">
@@ -114,7 +190,7 @@
         
         <div class="statsContent">
             <!-- Add Exercise Section -->
-            <div class="chartSection" style="padding-bottom: 10px;">
+            <div id="logExerciseContainer" class="chartSection" style="padding-bottom: 10px; margin-top: 20px;">
                 <h4>Log Exercise</h4>
                 <form id="workoutForm">
                     <div class="formGroup">
@@ -167,27 +243,32 @@
             <div class="nutrientItem">
                 <span class="nutrientLabel">Calories</span>
                 <span class="nutrientValue" id="valCalories">0</span>
-                <span class="nutrientUnit">kcal</span>
+                <span class="nutrientUnit">kcal / 2500</span>
+                <div class="miniTrack"><div class="miniFill" id="fillCalories"></div></div>
             </div>
             <div class="nutrientItem">
                 <span class="nutrientLabel">Protein</span>
                 <span class="nutrientValue" id="valProtein">0</span>
-                <span class="nutrientUnit">g</span>
+                <span class="nutrientUnit">g / 180</span>
+                <div class="miniTrack"><div class="miniFill" id="fillProtein"></div></div>
             </div>
             <div class="nutrientItem">
                 <span class="nutrientLabel">Carbs</span>
                 <span class="nutrientValue" id="valCarbs">0</span>
-                <span class="nutrientUnit">g</span>
+                <span class="nutrientUnit">g / 300</span>
+                <div class="miniTrack"><div class="miniFill" id="fillCarbs"></div></div>
             </div>
             <div class="nutrientItem">
                 <span class="nutrientLabel">Fat</span>
                 <span class="nutrientValue" id="valFat">0</span>
-                <span class="nutrientUnit">g</span>
+                <span class="nutrientUnit">g / 80</span>
+                <div class="miniTrack"><div class="miniFill" id="fillFat"></div></div>
             </div>
             <div class="nutrientItem">
                 <span class="nutrientLabel">Fiber</span>
                 <span class="nutrientValue" id="valFiber">0</span>
-                <span class="nutrientUnit">g</span>
+                <span class="nutrientUnit">g / 35</span>
+                <div class="miniTrack"><div class="miniFill" id="fillFiber"></div></div>
             </div>
         </div>
         <button id="closeNutrients" class="closeBtn">Close</button>
@@ -262,42 +343,93 @@
                 </div>
             </div>
 
-            <!-- Averages Table -->
+            <!-- LLM Insights Section -->
+            <div id="llmInsightsContainer" class="insightsSection">
+                <div class="insightsHeader">
+                    <svg class="insightIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.663 17H14.337C14.677 17 14.945 17.29 14.897 17.625L14.471 20.605C14.422 20.949 14.125 21.2 13.778 21.2H10.222C9.875 21.2 9.578 20.949 9.529 20.605L9.103 17.625C9.055 17.29 9.323 17 9.663 17Z" stroke="#f1c40f" stroke-width="2"/>
+                        <path d="M12 17V17C15.866 17 19 13.866 19 10C19 6.13401 15.866 3 12 3C8.13401 3 5 6.13401 5 10C5 13.866 8.13401 17 12 17Z" stroke="#f1c40f" stroke-width="2"/>
+                        <path d="M9 10H15" stroke="#f1c40f" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <h4>Smart Insights</h4>
+                </div>
+                <p id="insightText">Analyzing your patterns... Our AI will soon suggest ways to optimize your nutrition based on your weekly trends!</p>
+            </div>
+
+            <!-- Averages Table converted to Progress Bars -->
             <div class="avgSection">
                 <h4>Average Intake</h4>
-                <table class="avgTable">
-                    <thead>
-                        <tr>
-                            <th>Nutrient</th>
-                            <th>Avg</th>
-                            <th>Goal</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Calories</td>
-                            <td>2,100</td>
-                            <td>2,500</td>
-                        </tr>
-                        <tr>
-                            <td>Protein</td>
-                            <td>140g</td>
-                            <td>180g</td>
-                        </tr>
-                        <tr>
-                            <td>Carbs</td>
-                            <td>250g</td>
-                            <td>300g</td>
-                        </tr>
-                        <tr>
-                            <td>Fat</td>
-                            <td>65g</td>
-                            <td>80g</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="goalList">
+                    <!-- Calories -->
+                    <div class="goalItem">
+                        <div class="goalHeader">
+                            <span class="goalLabel">Calories</span>
+                            <span class="goalNumbers"><span class="countUp" data-target="2100">0</span> / 2500</span>
+                        </div>
+                        <div class="goalTrack">
+                            <div class="goalFill" data-width="84%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Protein -->
+                    <div class="goalItem">
+                        <div class="goalHeader">
+                            <span class="goalLabel">Protein</span>
+                            <span class="goalNumbers"><span class="countUp" data-target="140">0</span> / 180g</span>
+                        </div>
+                        <div class="goalTrack">
+                            <div class="goalFill" data-width="77%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Carbs -->
+                    <div class="goalItem">
+                        <div class="goalHeader">
+                            <span class="goalLabel">Carbs</span>
+                            <span class="goalNumbers"><span class="countUp" data-target="250">0</span> / 300g</span>
+                        </div>
+                        <div class="goalTrack">
+                            <div class="goalFill" data-width="83%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Fat -->
+                    <div class="goalItem">
+                        <div class="goalHeader">
+                            <span class="goalLabel">Fat</span>
+                            <span class="goalNumbers"><span class="countUp" data-target="65">0</span> / 80g</span>
+                        </div>
+                        <div class="goalTrack">
+                            <div class="goalFill" data-width="81%"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+    </div>
+</div>
+
+<!-- Side Menu Overlay & Drawer -->
+<div id="menuOverlay" class="modalOverlay hiddenView" style="justify-content: flex-end;">
+    <div id="sideMenu" class="sideMenu">
+        <header class="menuHeader">
+            <h3>Menu</h3>
+            <button id="closeMenu" class="iconBtn">&times;</button>
+        </header>
+        <ul class="menuList">
+            <li class="menuItem">
+                <span class="menuIcon">👤</span>
+                <span>Profile</span>
+            </li>
+            <li class="menuItem">
+                <span class="menuIcon">🎯</span>
+                <span>Goals</span>
+            </li>
+            <li class="menuItem">
+                <span class="menuIcon">⚙️</span>
+                <span>Settings</span>
+            </li>
+        </ul>
     </div>
 </div>
 
