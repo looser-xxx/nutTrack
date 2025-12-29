@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -428,6 +428,18 @@
             <li class="menuItem">
                 <span class="menuIcon">⚙️</span>
                 <span>Settings</span>
+            </li>
+            <li class="menuItem" id="themeToggleItem">
+                <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <span class="menuIcon">🌓</span>
+                        <span>Dark Mode</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="themeSwitch" checked>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
             </li>
         </ul>
     </div>

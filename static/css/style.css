@@ -1,3 +1,73 @@
+:root {
+    --bg-body: #cfd9df;
+    --bg-gradient: linear-gradient(135deg, #cfd9df 0%, #e2ebf0 100%);
+    --bg-card: #ffffff;
+    --bg-secondary: #f8f9fa;
+    --bg-highlight: #e8f5e9;
+    --bg-highlight-2: #f0f7f4;
+    --bg-input: #f9f9f9;
+    --bg-hover: #f0f0f0;
+    
+    --text-primary: #333333;
+    --text-secondary: #888888;
+    --text-muted: #aaaaaa;
+    --text-inverse: #ffffff;
+    
+    --primary-color: #3f7d69;
+    --primary-dark: #2a5a4b;
+    
+    --border-color: #eeeeee;
+    --border-highlight: #c8e6c9;
+    
+    --shadow-color: rgba(0,0,0,0.05);
+    --shadow-card: rgba(0,0,0,0.02);
+    --shadow-strong: rgba(0,0,0,0.2);
+    
+    --accent-yellow-bg: #fffdf0;
+    --accent-yellow-border: #f1c40f;
+    --accent-yellow-text: #856404;
+    
+    --overlay-bg: rgba(0, 0, 0, 0.5);
+    
+    --chart-cal: #3f7d69;
+    --chart-pro: #3498db;
+    --chart-carb: #f39c12;
+    --chart-fat: #e74c3c;
+    --chart-fiber: #27ae60;
+}
+
+[data-theme="dark"] {
+    --bg-body: #1c1e22;
+    --bg-gradient: linear-gradient(135deg, #1c1e22 0%, #0f1013 100%);
+    --bg-card: #1e1e1e;
+    --bg-secondary: #2c2c2c;
+    --bg-highlight: #2a3b35;
+    --bg-highlight-2: #25332e;
+    --bg-input: #2c2c2c;
+    --bg-hover: #333333;
+    
+    --text-primary: #e0e0e0;
+    --text-secondary: #a0a0a0;
+    --text-muted: #666666;
+    --text-inverse: #ffffff; /* Still white on buttons usually */
+    
+    --primary-color: #58b093;
+    --primary-dark: #3f7d69;
+    
+    --border-color: #333333;
+    --border-highlight: #3a5045;
+    
+    --shadow-color: rgba(0,0,0,0.5);
+    --shadow-card: rgba(0,0,0,0.3);
+    --shadow-strong: rgba(0,0,0,0.5);
+    
+    --accent-yellow-bg: #2c2a1e;
+    --accent-yellow-border: #d4ac0d;
+    --accent-yellow-text: #f1c40f;
+    
+    --overlay-bg: rgba(0, 0, 0, 0.8);
+}
+
 * {
     font-family: "JetBrains Mono Medium", sans-serif;
     box-sizing: border-box;
@@ -6,10 +76,12 @@
 }
 
 body {
-    background-color: #f4f7fa;
-    color: #333;
+    background: var(--bg-gradient);
+    background-attachment: fixed;
+    color: var(--text-primary);
     height: 100vh;
     overflow: hidden; /* Prevent body scroll, use container */
+    transition: background 0.3s ease, color 0.3s ease;
 }
 
 .appContainer {
@@ -20,22 +92,23 @@ body {
 
 /* Header */
 .appHeader {
-    background-color: #ffffff;
+    background-color: var(--bg-card);
     padding: 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+    box-shadow: 0 2px 10px var(--shadow-card);
     z-index: 10;
+    transition: background-color 0.3s ease;
 }
 
 .appHeader h2 {
     font-size: 1.2rem;
-    color: #3f7d69;
+    color: var(--primary-color);
 }
 
 .dateDisplay {
-    color: #888;
+    color: var(--text-secondary);
     font-size: 0.9rem;
 }
 
@@ -49,8 +122,8 @@ body {
 
 /* Summary Card */
 .summaryCard {
-    background: linear-gradient(135deg, #3f7d69 0%, #2a5a4b 100%);
-    color: white;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    color: var(--text-inverse);
     border-radius: 20px;
     padding: 30px;
     text-align: center;
@@ -92,10 +165,11 @@ body {
 
 .sectionHeader h3 {
     font-size: 1.1rem;
+    color: var(--text-primary);
 }
 
 .viewAll {
-    color: #3f7d69;
+    color: var(--primary-color);
     text-decoration: none;
     font-size: 0.9rem;
 }
@@ -105,7 +179,7 @@ body {
 }
 
 .mealItem {
-    background-color: white;
+    background-color: var(--bg-card);
     padding: 15px 20px;
     border-radius: 15px;
     margin-bottom: 12px;
@@ -120,7 +194,7 @@ body {
 }
 
 .mealItem:active {
-    background-color: #f0f0f0;
+    background-color: var(--bg-hover);
 }
 
 /* Expanded state for Today's Meals list */
@@ -128,11 +202,11 @@ body {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     margin-bottom: 0; /* Attach to details */
-    background-color: #e8f5e9; /* Light green highlight */
+    background-color: var(--bg-highlight); /* Light green highlight */
 }
 
 .mealDetails {
-    background-color: #f8f9fa;
+    background-color: var(--bg-secondary);
     margin-bottom: 12px;
     border-bottom-left-radius: 15px;
     border-bottom-right-radius: 15px;
@@ -142,7 +216,7 @@ body {
     /* Slide Down Effect */
     max-height: 0;
     padding: 0 20px;
-    transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+    transition: max-height 0.3s ease-out, padding 0.3s ease-out, background-color 0.3s ease;
 }
 
 .mealDetails:not(.hiddenView) {
@@ -176,13 +250,13 @@ body {
 
 .dLabel {
     font-size: 0.7rem;
-    color: #888;
+    color: var(--text-secondary);
     text-transform: uppercase;
 }
 
 .dVal {
     font-weight: bold;
-    color: #3f7d69;
+    color: var(--primary-color);
     font-size: 0.95rem;
 }
 
@@ -194,29 +268,31 @@ body {
 .mealName {
     font-weight: bold;
     font-size: 1rem;
+    color: var(--text-primary);
 }
 
 .mealTime {
-    color: #aaa;
+    color: var(--text-muted);
     font-size: 0.8rem;
     margin-top: 4px;
 }
 
 .mealCals {
     font-weight: bold;
-    color: #3f7d69;
+    color: var(--primary-color);
 }
 
 /* Bottom Navigation */
 #bottomNav {
-    background-color: white;
+    background-color: var(--bg-card);
     height: 80px;
     display: flex;
     justify-content: space-around;
     align-items: center;
-    box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
+    box-shadow: 0 -5px 20px var(--shadow-color);
     position: relative; /* Needed for absolute positioning of button if desired, but flex works too */
     z-index: 1000;
+    transition: background-color 0.3s ease;
 }
 
 .navItem {
@@ -226,7 +302,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    color: #aaa;
+    color: var(--text-muted);
     cursor: pointer;
     width: 60px;
     transition: transform 0.1s ease, opacity 0.1s ease;
@@ -238,7 +314,7 @@ body {
 }
 
 .navItem.activeNav {
-    color: #3f7d69;
+    color: var(--primary-color);
 }
 
 .navIcon {
@@ -260,22 +336,22 @@ body {
     
     width: 70px;
     height: 70px;
-    background-color: #3f7d69;
+    background-color: var(--primary-color);
     border-radius: 50%;
-    color: white;
+    color: var(--text-inverse);
     
     display: flex;
     justify-content: center;
     align-items: center;
     
     box-shadow: 0 5px 15px rgba(63, 125, 105, 0.4);
-    border: 4px solid #f4f7fa; /* Match body bg to create "cutout" effect */
-    transition: transform 0.1s ease, background-color 0.1s ease;
+    border: none;
+    transition: transform 0.1s ease, background-color 0.1s ease, border-color 0.3s ease;
 }
 
 .addBtn:active {
     transform: translateX(-50%) scale(0.9);
-    background-color: #2a5a4b;
+    background-color: var(--primary-dark);
 }
 
 .addBtn .icon {
@@ -296,7 +372,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: var(--overlay-bg);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -309,15 +385,16 @@ body {
 }
 
 .nutrientModal {
-    background-color: white;
+    background-color: var(--bg-card);
     width: 90%;
     max-width: 400px;
     border-radius: 20px;
     padding: 30px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    box-shadow: 0 10px 30px var(--shadow-strong);
     animation: slideUp 0.3s ease-out;
     max-height: 90vh; /* Prevent modal from exceeding screen height */
     overflow-y: auto; /* Allow scrolling inside the modal itself if content is too long */
+    transition: background-color 0.3s ease;
 }
 
 @keyframes slideUp {
@@ -328,7 +405,7 @@ body {
 .nutrientModal h3 {
     text-align: center;
     margin-bottom: 25px;
-    color: #3f7d69;
+    color: var(--primary-color);
 }
 
 .nutrientGrid {
@@ -339,24 +416,25 @@ body {
 }
 
 .nutrientItem {
-    background-color: #f8f9fa;
+    background-color: var(--bg-secondary);
     padding: 15px;
     border-radius: 12px;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
+    transition: background-color 0.3s ease;
 }
 
 .nutrientItem:first-child {
     grid-column: span 2; /* Make calories span full width */
-    background-color: #e8f5e9;
-    border: 1px solid #c8e6c9;
+    background-color: var(--bg-highlight);
+    border: 1px solid var(--border-highlight);
 }
 
 .nutrientLabel {
     font-size: 0.8rem;
-    color: #666;
+    color: var(--text-secondary);
     margin-bottom: 5px;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -365,19 +443,19 @@ body {
 .nutrientValue {
     font-size: 1.5rem;
     font-weight: bold;
-    color: #333;
+    color: var(--text-primary);
 }
 
 .nutrientUnit {
     font-size: 0.8rem;
-    color: #999;
+    color: var(--text-muted);
 }
 
 /* Mini Progress Bar for Nutrients */
 .miniTrack {
     width: 80%; /* Width within the card */
     height: 6px;
-    background-color: #e0e0e0;
+    background-color: var(--border-color);
     border-radius: 3px;
     margin-top: 8px;
     overflow: hidden;
@@ -385,25 +463,25 @@ body {
 
 .miniFill {
     height: 100%;
-    background-color: #3f7d69;
+    background-color: var(--primary-color);
     width: 0; /* Animated by JS */
     transition: width 1s cubic-bezier(0.22, 1, 0.36, 1);
     border-radius: 3px;
 }
 
 /* Specific color tweaks if desired */
-#fillCalories { background-color: #3f7d69; }
-#fillProtein { background-color: #3498db; }
-#fillCarbs { background-color: #f39c12; }
-#fillFat { background-color: #e74c3c; }
-#fillFiber { background-color: #27ae60; }
+#fillCalories { background-color: var(--chart-cal); }
+#fillProtein { background-color: var(--chart-pro); }
+#fillCarbs { background-color: var(--chart-carb); }
+#fillFat { background-color: var(--chart-fat); }
+#fillFiber { background-color: var(--chart-fiber); }
 
 
 .closeBtn {
     width: 100%;
     padding: 15px;
-    background-color: #3f7d69;
-    color: white;
+    background-color: var(--primary-color);
+    color: var(--text-inverse);
     border: none;
     border-radius: 12px;
     font-size: 1rem;
@@ -412,7 +490,7 @@ body {
 }
 
 .closeBtn:active {
-    background-color: #2a5a4b;
+    background-color: var(--primary-dark);
 }
 
 /* Add Meal Form Styles */
@@ -425,7 +503,7 @@ body {
     display: block;
     margin-bottom: 8px;
     font-size: 0.9rem;
-    color: #666;
+    color: var(--text-secondary);
     font-weight: bold;
 }
 
@@ -433,17 +511,18 @@ body {
     width: 100%;
     padding: 12px 15px;
     border-radius: 10px;
-    border: 2px solid #eee;
-    background-color: #f9f9f9;
+    border: 2px solid var(--border-color);
+    background-color: var(--bg-input);
     font-size: 1rem;
-    transition: border-color 0.2s;
+    transition: border-color 0.2s, background-color 0.3s, color 0.3s;
     appearance: none; /* Removes default styling for select on some browsers */
+    color: var(--text-primary);
 }
 
 .formControl:focus {
     outline: none;
-    border-color: #3f7d69;
-    background-color: white;
+    border-color: var(--primary-color);
+    background-color: var(--bg-card);
 }
 
 /* SEARCHABLE LIST STYLES */
@@ -459,7 +538,7 @@ body {
     transform: translateY(-50%);
     background: none;
     border: none;
-    color: #999;
+    color: var(--text-muted);
     font-size: 1.2rem;
     cursor: pointer;
     padding: 0 5px;
@@ -467,12 +546,12 @@ body {
 
 .foodListContainer {
     margin-top: 5px;
-    border: 1px solid #eee;
+    border: 1px solid var(--border-color);
     border-radius: 10px;
     max-height: 150px;
     overflow-y: auto;
-    background-color: white;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+    background-color: var(--bg-card);
+    box-shadow: 0 2px 5px var(--shadow-card);
     display: none; /* Hidden by default until populated/active */
 }
 
@@ -483,9 +562,10 @@ body {
 .foodOption {
     padding: 10px 15px;
     cursor: pointer;
-    border-bottom: 1px solid #f9f9f9;
+    border-bottom: 1px solid var(--border-color);
     font-size: 0.95rem;
     transition: background-color 0.1s;
+    color: var(--text-primary);
 }
 
 .foodOption:last-child {
@@ -493,12 +573,12 @@ body {
 }
 
 .foodOption:hover {
-    background-color: #f0f7f4;
+    background-color: var(--bg-hover);
 }
 
 .foodOption.selected {
-    background-color: #e8f5e9;
-    color: #3f7d69;
+    background-color: var(--bg-highlight);
+    color: var(--primary-color);
     font-weight: bold;
 }
 /* END SEARCHABLE LIST STYLES */
@@ -515,10 +595,10 @@ body {
     width: 42px;
     height: 42px;
     flex-shrink: 0;
-    border: 1px solid #eee;
+    border: 1px solid var(--border-color);
     border-radius: 50%;
-    background-color: white;
-    color: #3f7d69;
+    background-color: var(--bg-card);
+    color: var(--primary-color);
     font-size: 1.2rem;
     cursor: pointer;
     display: flex;
@@ -529,8 +609,8 @@ body {
 
 .stepperBtn:active {
     transform: scale(0.9);
-    background-color: #f0f7f4;
-    border-color: #3f7d69;
+    background-color: var(--bg-highlight-2);
+    border-color: var(--primary-color);
 }
 
 .stepperInput {
@@ -540,23 +620,25 @@ body {
     width: 80px;
     border: none;
     background: transparent;
+    color: var(--text-primary);
 }
 /* End Stepper Styles */
 
 
 /* Nutrition Info Box */
 .nutritionLogSection {
-    background-color: #f0f7f4;
+    background-color: var(--bg-highlight-2);
     border-radius: 12px;
     padding: 15px;
     margin-bottom: 20px;
     text-align: center;
-    border: 1px dashed #3f7d69;
+    border: 1px dashed var(--primary-color);
+    transition: background-color 0.3s ease;
 }
 
 .nutritionLogSection h4 {
     font-size: 0.85rem;
-    color: #3f7d69;
+    color: var(--primary-color);
     margin-bottom: 10px;
     text-transform: uppercase;
 }
@@ -573,21 +655,21 @@ body {
 
 .miniItem .lbl {
     font-size: 0.7rem;
-    color: #888;
+    color: var(--text-secondary);
 }
 
 .miniItem .val {
     font-weight: bold;
     font-size: 0.9rem;
-    color: #333;
+    color: var(--text-primary);
 }
 
 /* Buttons */
 .submitBtn {
     width: 100%;
     padding: 15px;
-    background-color: #3f7d69;
-    color: white;
+    background-color: var(--primary-color);
+    color: var(--text-inverse);
     border: none;
     border-radius: 12px;
     font-size: 1rem;
@@ -598,36 +680,39 @@ body {
 
 .submitBtn:active {
     transform: scale(0.97);
-    background-color: #2a5a4b;
+    background-color: var(--primary-dark);
 }
 
 .secondaryBtn {
-    background-color: #eee;
-    color: #555;
+    background-color: var(--border-color);
+    color: var(--text-primary);
 }
 
 .secondaryBtn:active {
-    background-color: #ddd;
+    background-color: var(--text-muted);
 }
 
 /* STATS VIEW STYLES */
 .statsView {
-    background-color: #f4f7fa;
+    background: var(--bg-gradient);
+    background-attachment: fixed;
     width: 100%;
     height: 100%;
     overflow-y: auto;
     animation: slideUp 0.3s ease-out;
     display: flex;
     flex-direction: column;
+    transition: background 0.3s ease;
 }
 
 .statsHeader {
-    background-color: white;
+    background-color: var(--bg-card);
     padding: 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+    box-shadow: 0 2px 10px var(--shadow-card);
+    transition: background-color 0.3s ease;
 }
 
 #todaysMealsHeader {
@@ -636,14 +721,14 @@ body {
 
 .statsHeader h3 {
     font-size: 1.2rem;
-    color: #3f7d69;
+    color: var(--primary-color);
 }
 
 .iconBtn {
     background: none;
     border: none;
     font-size: 2rem;
-    color: #999;
+    color: var(--text-muted);
     cursor: pointer;
     line-height: 1;
 }
@@ -659,16 +744,16 @@ body {
     padding: 10px;
     border: none;
     border-radius: 10px;
-    background-color: #e0e0e0;
-    color: #666;
+    background-color: var(--border-color);
+    color: var(--text-secondary);
     font-weight: bold;
     cursor: pointer;
     transition: all 0.2s ease;
 }
 
 .tabBtn.active {
-    background-color: #3f7d69;
-    color: white;
+    background-color: var(--primary-color);
+    color: var(--text-inverse);
     box-shadow: 0 4px 10px rgba(63, 125, 105, 0.3);
 }
 
@@ -678,16 +763,17 @@ body {
 }
 
 .chartSection, .avgSection, .insightsSection {
-    background-color: white;
+    background-color: var(--bg-card);
     border-radius: 20px;
     padding: 20px;
     margin-bottom: 20px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+    box-shadow: 0 2px 10px var(--shadow-card);
+    transition: background-color 0.3s ease;
 }
 
 .insightsSection {
-    background-color: #fffdf0; /* Soft warm yellow */
-    border-left: 5px solid #f1c40f; /* Accent color */
+    background-color: var(--accent-yellow-bg); 
+    border-left: 5px solid var(--accent-yellow-border); 
 }
 
 .insightsHeader {
@@ -699,13 +785,13 @@ body {
 
 .insightsHeader h4 {
     margin: 0;
-    color: #856404;
+    color: var(--accent-yellow-text);
     font-size: 0.95rem;
 }
 
 #insightText {
     font-size: 0.85rem;
-    color: #666;
+    color: var(--text-secondary);
     line-height: 1.5;
     font-style: italic;
     display: inline;
@@ -715,7 +801,7 @@ body {
     display: inline-block;
     width: 2px;
     height: 1em;
-    background-color: #f1c40f;
+    background-color: var(--accent-yellow-border);
     margin-left: 2px;
     vertical-align: middle;
     animation: blink 0.7s infinite;
@@ -728,7 +814,7 @@ body {
 
 .chartSection h4, .avgSection h4 {
     font-size: 1rem;
-    color: #333;
+    color: var(--text-primary);
     margin-bottom: 20px;
     opacity: 0.8;
 }
@@ -739,13 +825,13 @@ body {
     display: flex;
     justify-content: space-around;
     align-items: flex-end;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--border-color);
     padding-bottom: 10px;
 }
 
 .bar {
     width: 10%;
-    background-color: #3f7d69;
+    background-color: var(--primary-color);
     border-radius: 5px 5px 0 0;
     opacity: 0.8;
     /* Animation setup */
@@ -781,26 +867,26 @@ body {
 }
 
 .goalLabel {
-    color: #333;
+    color: var(--text-primary);
     font-weight: bold;
 }
 
 .goalNumbers {
-    color: #666;
+    color: var(--text-secondary);
     font-size: 0.85rem;
 }
 
 .goalTrack {
     width: 100%;
     height: 12px;
-    background-color: #e8f5e9;
+    background-color: var(--bg-highlight);
     border-radius: 6px;
     overflow: hidden;
 }
 
 .goalFill {
     height: 100%;
-    background-color: #3f7d69;
+    background-color: var(--primary-color);
     border-radius: 6px;
     width: 0; /* JS will animate this */
     transition: width 1s cubic-bezier(0.22, 1, 0.36, 1); /* Smooth easing */
@@ -808,13 +894,14 @@ body {
 
 /* SIDE MENU STYLES */
 .sideMenu {
-    background-color: white;
+    background-color: var(--bg-card);
     width: 70%; /* 70% of screen width */
     height: 100%;
-    box-shadow: -5px 0 20px rgba(0,0,0,0.1);
+    box-shadow: -5px 0 20px var(--shadow-color);
     display: flex;
     flex-direction: column;
     animation: slideInRight 0.3s ease-out forwards;
+    transition: background-color 0.3s ease;
 }
 
 @keyframes slideInRight {
@@ -827,12 +914,12 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .menuHeader h3 {
     font-size: 1.2rem;
-    color: #3f7d69;
+    color: var(--primary-color);
 }
 
 .menuList {
@@ -846,14 +933,14 @@ body {
     display: flex;
     align-items: center;
     gap: 15px;
-    color: #333;
-    border-bottom: 1px solid #f9f9f9;
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--bg-input);
     cursor: pointer;
     transition: background-color 0.2s;
 }
 
 .menuList .menuItem:active {
-    background-color: #f0f7f4;
+    background-color: var(--bg-hover);
 }
 
 .menuIcon {
@@ -863,4 +950,54 @@ body {
 /* Ensure the overlay for menu is specifically right-aligned */
 #menuOverlay {
     justify-content: flex-end;
+}
+
+/* Toggle Switch Styles */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 28px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 28px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: var(--primary-color);
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px var(--primary-color);
+}
+
+input:checked + .slider:before {
+    transform: translateX(22px);
 }

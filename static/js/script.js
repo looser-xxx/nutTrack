@@ -378,4 +378,30 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
         });
     }
+
+    // Theme Toggle
+    const themeSwitch = document.getElementById('themeSwitch');
+    
+    // Check saved theme
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+        document.documentElement.removeAttribute('data-theme');
+        if (themeSwitch) themeSwitch.checked = false;
+    } else {
+        // Default to dark or use saved dark
+        document.documentElement.setAttribute('data-theme', 'dark');
+        if (themeSwitch) themeSwitch.checked = true;
+    }
+
+    if (themeSwitch) {
+        themeSwitch.addEventListener('change', (e) => {
+            if (e.target.checked) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+    }
 });

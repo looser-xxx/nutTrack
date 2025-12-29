@@ -1,50 +1,62 @@
 # NutTracker Project Context
 
 ## Project Overview
-**NutTracker** is a nutrition tracking application designed to monitor daily food intake and calculate nutritional values (calories, protein, carbs, fat, fiber).
+**NutTracker** is a mobile-first nutrition and fitness tracking application. It allows users to monitor daily food intake, log workouts, and visualize nutritional trends through an interactive, native-feeling web interface.
 
-The project currently exists in a hybrid state:
-1.  **Logic Core:** A set of Python functions in `app.py` that handle data reading (`food.csv`), user input (CLI-based), and data persistence (`currentDay.json`, `avg.json`). **Note:** This logic is currently encapsulated in a `main()` function that is *not* called during standard execution.
-2.  **Web Interface:** A basic Flask application that serves a static HTML dashboard. The frontend is currently non-functional (hardcoded HTML, empty JavaScript) and does not yet communicate with the backend logic.
+The project has evolved from a CLI logic core into a feature-rich Progressive Web App (PWA).
 
 ## Architecture
 
 ### Backend (Python/Flask)
-*   **Entry Point:** `app.py`
-*   **Framework:** Flask
-*   **Data Source:** `food.csv` (Reads nutritional info per 100g).
-    *   *Schema:* `name, calories, protein, carbs, fat, fiber`
-*   **Persistence:**
-    *   `currentDay.json`: Stores the current date and running totals for the day.
-    *   `avg.json`: Intended to store historical averages (weekly/monthly).
+*   **Server:** Flask running on port `5050`.
+*   **Logic:** Core nutrient calculations and day-tracking logic in `app.py`.
+*   **Data:** 
+    *   `food.csv`: Master nutritional database (per 100g).
+    *   `currentDay.json`: Tracks daily consumption.
+    *   `avg.json`: Stores historical averages.
 
-### Frontend
-*   **Structure:** `templates/index.html` (Simple dashboard with "Home", "Add", and "Stats" navigation).
-*   **Styling:** `static/css/style.css`
-*   **Logic:** `static/js/script.js` (Currently **empty**).
+### Frontend (Modern Mobile UI)
+*   **Layout:** Fixed header/footer with a scrollable central content area.
+*   **Navigation:**
+    *   **Bottom Nav:** Quick access to Workout, Add Meal (+), and Stats.
+    *   **Side Drawer:** Hamburger menu containing Profile, Goals, and Settings.
+*   **Interactivity:**
+    *   **Modals:** All major features (Add Meal, Stats, Workouts, Meal Details) use full-screen or card-based overlays.
+    *   **Search:** Real-time client-side food filtering.
+    *   **Stepper:** Minimalist quantity adjustment (+/- buttons).
+    *   **Expandable Lists:** "Today's Meals" items expand to show full nutrient breakdowns.
+*   **Animations:**
+    *   Smooth transitions for modals and sidebars.
+    *   Counting-up numbers for nutrient totals.
+    *   Animated loading bars and chart trends.
+    *   Typewriter effect for AI-driven "Smart Insights".
+
+### PWA & Offline Support
+*   **Manifest:** `static/manifest.json` configures the app for standalone mobile installation (hides browser UI).
+*   **Service Worker:** `static/sw.js` handles basic caching for performance and installation requirements.
 
 ## Key Files
-*   **`app.py`**: Contains both the Flask server setup and the core application logic (functions like `getData`, `getInput`, `updateToday`, `newDay`).
-*   **`food.csv`**: The "database" of known foods and their nutritional content.
-*   **`currentDay.json`**: JSON file tracking the current day's date and accumulated macro-nutrients.
-*   **`templates/index.html`**: The main view for the web application.
+*   **`app.py`**: Flask server and backend logic.
+*   **`templates/index.html`**: Single-page application structure with multiple hidden views (modals).
+*   **`static/css/style.css`**: Comprehensive styling including theme colors, animations, and PWA layout.
+*   **`static/js/script.js`**: Frontend engine handling state, search, animations, and UI toggles.
+*   **`static/sw.js`**: Service worker for PWA functionality.
 
 ## Usage
-### Running the Web Server
-To start the Flask server:
-```bash
-python app.py
-```
-*   Access the app at `http://localhost:5000` (or `http://0.0.0.0:5000`).
-*   *Current Behavior:* Displays a static HTML page with hardcoded values.
+### Running the App
+1. Ensure Flask is installed.
+2. Run the server:
+   ```bash
+   python app.py
+   ```
+3. Access at `http://localhost:5050`.
 
-### Running the CLI Logic
-The CLI logic (interactive input loop) is contained in the `main()` function within `app.py`. To run it, you currently need to modify the file to call `main()` instead of `app.run()`, or import and run it from a Python shell.
+### Mobile Installation
+To view without browser bars:
+1. Open the URL in a mobile browser (Chrome/Safari).
+2. Select "Add to Home Screen" or "Install App".
+3. Launch from the home screen icon.
 
-## Development Status & Conventions
-*   **Status:** Prototype/Transition. The CLI logic needs to be exposed via API endpoints to be usable by the frontend.
-*   **Coding Style:** Python standard (PEP 8 mostly observed).
-*   **Data Handling:**
-    *   Food data is read into a dictionary.
-    *   Daily updates read/write to local JSON files.
-    *   Nutrient values are stored as lists of floats `[calories, protein, carbs, fat, fiber]`.
+## Development Status
+*   **Frontend:** Structurally complete and polished.
+*   **Backend Integration:** Frontend currently uses mock data for some features (Stats, Search, Workouts). Next steps involve connecting these UI components to the Python logic via Flask API endpoints and implementing a real database.
