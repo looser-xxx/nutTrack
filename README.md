@@ -38,18 +38,32 @@
     cd nutTracker
     ```
 
-2.  **Install Dependencies:**
-    This project relies on Flask.
+2.  **Set up a Virtual Environment:**
+    It is recommended to use a virtual environment to manage dependencies.
+    
+    *   **Linux/macOS:**
+        ```bash
+        python3 -m venv venv
+        source venv/bin/activate
+        ```
+    *   **Windows:**
+        ```bash
+        python -m venv venv
+        venv\Scripts\activate
+        ```
+
+3.  **Install Dependencies:**
+    Install the required modules from `requirements.txt`.
     ```bash
-    pip install flask
+    pip install -r requirements.txt
     ```
 
-3.  **Run the Application:**
+4.  **Run the Application:**
     ```bash
     python app.py
     ```
 
-4.  **Access the App:**
+5.  **Access the App:**
     Open your browser and navigate to: `http://localhost:5050`
 
 ## 📱 Mobile Installation (PWA)
@@ -87,6 +101,6 @@ nutTracker/
 
 Contributions are welcome! Feel free to open issues or submit pull requests.
 
-## 📄 License
+## ⚠️ Note on Development
 
-This project is open-source and available under the [MIT License](LICENSE).
+This project utilizes a **Large Language Model (LLM)** to assist in the design and implementation of the **Frontend UI only** (HTML, CSS, JavaScript). The **Backend logic** (Python/Flask) is currently a work in progress and will be developed independently, without reliance on LLM generation, to ensure manual control and deep understanding of the core logic.
