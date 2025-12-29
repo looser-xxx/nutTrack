@@ -2,8 +2,11 @@
 
 **NutTracker** is a modern, mobile-first Progressive Web App (PWA) designed to help you track your nutrition and fitness goals with ease. Built with a lightweight Flask backend and a native-feeling vanilla JavaScript frontend, it offers a seamless experience on both mobile and desktop.
 
-![NutTracker Banner](static/images/banner_placeholder.png) 
-*(Note: Add a screenshot here)*
+## 📱 App Preview
+
+| Home Screen | Today's Log | Statistics |
+| :---: | :---: | :---: |
+| ![Home](images/home.png) | ![Today's Log](images/todayLog.png) | ![Statistics](images/statistics.png) |
 
 ## ✨ Features
 
