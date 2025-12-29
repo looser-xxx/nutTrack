@@ -1,0 +1,642 @@
+* {
+    font-family: "JetBrains Mono Medium", sans-serif;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #f4f7fa;
+    color: #333;
+    height: 100vh;
+    overflow: hidden; /* Prevent body scroll, use container */
+}
+
+.appContainer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* Header */
+.appHeader {
+    background-color: #ffffff;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+    z-index: 10;
+}
+
+.appHeader h2 {
+    font-size: 1.2rem;
+    color: #3f7d69;
+}
+
+.dateDisplay {
+    color: #888;
+    font-size: 0.9rem;
+}
+
+/* Main Content Area */
+.contentArea {
+    flex: 1;
+    overflow-y: auto; /* Scrollable area */
+    padding: 20px;
+    padding-bottom: 100px; /* Space for the floating button/nav */
+}
+
+/* Summary Card */
+.summaryCard {
+    background: linear-gradient(135deg, #3f7d69 0%, #2a5a4b 100%);
+    color: white;
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 20px rgba(63, 125, 105, 0.2);
+    transition: transform 0.1s ease, filter 0.1s ease;
+    cursor: pointer;
+}
+
+.summaryCard:active {
+    transform: scale(0.98);
+    filter: brightness(0.9);
+}
+
+.summaryCard h3 {
+    font-size: 1rem;
+    opacity: 0.9;
+    margin-bottom: 15px;
+}
+
+.summaryCard h1 {
+    font-size: 2.5rem;
+    margin-bottom: 5px;
+}
+
+.summaryCard p {
+    opacity: 0.8;
+    font-size: 0.9rem;
+}
+
+/* Lists */
+.sectionHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 0 5px;
+}
+
+.sectionHeader h3 {
+    font-size: 1.1rem;
+}
+
+.viewAll {
+    color: #3f7d69;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.mealList {
+    list-style: none;
+}
+
+.mealItem {
+    background-color: white;
+    padding: 15px 20px;
+    border-radius: 15px;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+    transition: transform 0.1s ease, background-color 0.1s ease;
+    cursor: pointer;
+}
+
+.mealItem:active {
+    transform: scale(0.98);
+    background-color: #f0f0f0;
+}
+
+.mealInfo {
+    display: flex;
+    flex-direction: column;
+}
+
+.mealName {
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.mealTime {
+    color: #aaa;
+    font-size: 0.8rem;
+    margin-top: 4px;
+}
+
+.mealCals {
+    font-weight: bold;
+    color: #3f7d69;
+}
+
+/* Bottom Navigation */
+#bottomNav {
+    background-color: white;
+    height: 80px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
+    position: relative; /* Needed for absolute positioning of button if desired, but flex works too */
+    z-index: 1000;
+}
+
+.navItem {
+    background: none;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #aaa;
+    cursor: pointer;
+    width: 60px;
+    transition: transform 0.1s ease, opacity 0.1s ease;
+}
+
+.navItem:active {
+    transform: scale(0.9);
+    opacity: 0.7;
+}
+
+.navItem.activeNav {
+    color: #3f7d69;
+}
+
+.navIcon {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 4px;
+}
+
+.navItem .label {
+    font-size: 0.75rem;
+}
+
+/* Floating Add Button */
+.addBtn {
+    position: absolute;
+    top: -30px; /* Float above the bar */
+    left: 50%;
+    transform: translateX(-50%);
+    
+    width: 70px;
+    height: 70px;
+    background-color: #3f7d69;
+    border-radius: 50%;
+    color: white;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    box-shadow: 0 5px 15px rgba(63, 125, 105, 0.4);
+    border: 4px solid #f4f7fa; /* Match body bg to create "cutout" effect */
+    transition: transform 0.1s ease, background-color 0.1s ease;
+}
+
+.addBtn:active {
+    transform: translateX(-50%) scale(0.9);
+    background-color: #2a5a4b;
+}
+
+.addBtn .icon {
+    width: 32px;
+    height: 32px;
+}
+
+/* Nav spacer to prevent content from being hidden by the button if we used flex spacer, 
+   but since button is absolute, we just need space in the bar visually */
+.navSpacer {
+    width: 60px; 
+}
+
+/* Modal Styles */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    backdrop-filter: blur(5px);
+}
+
+.hiddenView {
+    display: none;
+}
+
+.nutrientModal {
+    background-color: white;
+    width: 90%;
+    max-width: 400px;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    animation: slideUp 0.3s ease-out;
+    max-height: 90vh; /* Prevent modal from exceeding screen height */
+    overflow-y: auto; /* Allow scrolling inside the modal itself if content is too long */
+}
+
+@keyframes slideUp {
+    from { transform: translateY(50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.nutrientModal h3 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #3f7d69;
+}
+
+.nutrientGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.nutrientItem {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.nutrientItem:first-child {
+    grid-column: span 2; /* Make calories span full width */
+    background-color: #e8f5e9;
+    border: 1px solid #c8e6c9;
+}
+
+.nutrientLabel {
+    font-size: 0.8rem;
+    color: #666;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.nutrientValue {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.nutrientUnit {
+    font-size: 0.8rem;
+    color: #999;
+}
+
+.closeBtn {
+    width: 100%;
+    padding: 15px;
+    background-color: #3f7d69;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: transform 0.1s ease, background-color 0.1s ease;
+}
+
+.closeBtn:active {
+    transform: scale(0.97);
+    background-color: #2a5a4b;
+}
+
+/* Add Meal Form Styles */
+.formGroup {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.formGroup label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    color: #666;
+    font-weight: bold;
+}
+
+.formControl {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 10px;
+    border: 2px solid #eee;
+    background-color: #f9f9f9;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+    appearance: none; /* Removes default styling for select on some browsers */
+}
+
+.formControl:focus {
+    outline: none;
+    border-color: #3f7d69;
+    background-color: white;
+}
+
+/* SEARCHABLE LIST STYLES */
+.searchWrapper {
+    position: relative;
+    width: 100%;
+}
+
+.clearSearchBtn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #999;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0 5px;
+}
+
+.foodListContainer {
+    margin-top: 5px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    max-height: 150px;
+    overflow-y: auto;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+    display: none; /* Hidden by default until populated/active */
+}
+
+.foodListContainer.active {
+    display: block;
+}
+
+.foodOption {
+    padding: 10px 15px;
+    cursor: pointer;
+    border-bottom: 1px solid #f9f9f9;
+    font-size: 0.95rem;
+    transition: background-color 0.1s;
+}
+
+.foodOption:last-child {
+    border-bottom: none;
+}
+
+.foodOption:hover {
+    background-color: #f0f7f4;
+}
+
+.foodOption.selected {
+    background-color: #e8f5e9;
+    color: #3f7d69;
+    font-weight: bold;
+}
+/* END SEARCHABLE LIST STYLES */
+
+
+/* Quantity Stepper Styles */
+.qtyStepper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.stepperBtn {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    border: 1px solid #eee;
+    border-radius: 50%;
+    background-color: white;
+    color: #3f7d69;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s ease;
+}
+
+.stepperBtn:active {
+    transform: scale(0.9);
+    background-color: #f0f7f4;
+    border-color: #3f7d69;
+}
+
+.stepperInput {
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    width: 80px;
+    border: none;
+    background: transparent;
+}
+/* End Stepper Styles */
+
+
+/* Nutrition Info Box */
+.nutritionLogSection {
+    background-color: #f0f7f4;
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 20px;
+    text-align: center;
+    border: 1px dashed #3f7d69;
+}
+
+.nutritionLogSection h4 {
+    font-size: 0.85rem;
+    color: #3f7d69;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+.miniNutrientGrid {
+    display: flex;
+    justify-content: space-around;
+}
+
+.miniItem {
+    display: flex;
+    flex-direction: column;
+}
+
+.miniItem .lbl {
+    font-size: 0.7rem;
+    color: #888;
+}
+
+.miniItem .val {
+    font-weight: bold;
+    font-size: 0.9rem;
+    color: #333;
+}
+
+/* Buttons */
+.submitBtn {
+    width: 100%;
+    padding: 15px;
+    background-color: #3f7d69;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-bottom: 10px;
+    transition: transform 0.1s ease, background-color 0.1s ease;
+}
+
+.submitBtn:active {
+    transform: scale(0.97);
+    background-color: #2a5a4b;
+}
+
+.secondaryBtn {
+    background-color: #eee;
+    color: #555;
+}
+
+.secondaryBtn:active {
+    background-color: #ddd;
+}
+
+/* STATS VIEW STYLES */
+.statsView {
+    background-color: #f4f7fa;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    animation: slideUp 0.3s ease-out;
+    display: flex;
+    flex-direction: column;
+}
+
+.statsHeader {
+    background-color: white;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+}
+
+.statsHeader h3 {
+    font-size: 1.2rem;
+    color: #3f7d69;
+}
+
+.iconBtn {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: #999;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.statsTabs {
+    display: flex;
+    padding: 15px 20px;
+    gap: 10px;
+}
+
+.tabBtn {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    background-color: #e0e0e0;
+    color: #666;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tabBtn.active {
+    background-color: #3f7d69;
+    color: white;
+    box-shadow: 0 4px 10px rgba(63, 125, 105, 0.3);
+}
+
+.statsContent {
+    flex: 1;
+    padding: 0 20px 20px 20px;
+}
+
+.chartSection, .avgSection {
+    background-color: white;
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+}
+
+.chartSection h4, .avgSection h4 {
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 20px;
+    opacity: 0.8;
+}
+
+/* Simple CSS Bar Chart Placeholder */
+.chartPlaceholder {
+    height: 200px;
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.bar {
+    width: 10%;
+    background-color: #3f7d69;
+    border-radius: 5px 5px 0 0;
+    opacity: 0.8;
+}
+
+.avgTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.avgTable th {
+    text-align: left;
+    color: #999;
+    font-size: 0.85rem;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.avgTable td {
+    padding: 15px 0;
+    font-size: 0.95rem;
+    color: #333;
+    border-bottom: 1px solid #f9f9f9;
+}
+
+.avgTable td:last-child {
+    color: #666;
+    font-size: 0.85rem;
+}

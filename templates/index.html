@@ -2,9 +2,287 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
     <title>NutTracker</title>
+
+    <link rel="stylesheet" href="../static/css/style.css">
 </head>
 <body>
-<h1>Welcome to NutTracker</h1>
+
+<div class="appContainer">
+    <header class="appHeader">
+        <h2>NutTracker</h2>
+        <span class="dateDisplay">Today</span>
+    </header>
+
+    <main class="contentArea">
+        <div id="todayMain" class="card summaryCard">
+            <h3>Calories Left</h3>
+            <div class="progressCircle">
+                <h1>1,250</h1>
+                <p>of 2,500 kcal</p>
+            </div>
+        </div>
+
+        <div class="sectionHeader">
+            <h3>Recent Meals</h3>
+            <a href="#" class="viewAll">View All</a>
+        </div>
+
+        <ul class="mealList">
+            <li class="mealItem">
+                <div class="mealInfo">
+                    <span class="mealName">Oatmeal & Berries</span>
+                    <span class="mealTime">08:30 AM</span>
+                </div>
+                <span class="mealCals">350 kcal</span>
+            </li>
+            <li class="mealItem">
+                <div class="mealInfo">
+                    <span class="mealName">Grilled Chicken Salad</span>
+                    <span class="mealTime">12:15 PM</span>
+                </div>
+                <span class="mealCals">450 kcal</span>
+            </li>
+            <li class="mealItem">
+                <div class="mealInfo">
+                    <span class="mealName">Apple</span>
+                    <span class="mealTime">03:00 PM</span>
+                </div>
+                <span class="mealCals">95 kcal</span>
+            </li>
+             <!-- Duplicate items to demonstrate scrolling -->
+            <li class="mealItem">
+                <div class="mealInfo">
+                    <span class="mealName">Protein Shake</span>
+                    <span class="mealTime">05:45 PM</span>
+                </div>
+                <span class="mealCals">180 kcal</span>
+            </li>
+        </ul>
+    </main>
+
+    <nav id="bottomNav">
+        <button id="navWorkout" class="navItem">
+            <svg class="navIcon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6.5 17H3.5C2.67157 17 2 16.3284 2 15.5V8.5C2 7.67157 2.67157 7 3.5 7H6.5M17.5 17H20.5C21.3284 17 22 16.3284 22 15.5V8.5C22 7.67157 21.3284 7 20.5 7H17.5M6.5 17V7M17.5 17V7M6.5 12H17.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="label">Workout</span>
+        </button>
+        <div class="navSpacer"></div> <!-- Spacer for the floating button -->
+        <button id="navAdd" class="navItem addBtn">
+            <svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 4V20M4 12H20" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </button>
+        <button id="navStats" class="navItem">
+            <svg class="navIcon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M18 20V10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M12 20V4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M6 20V14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="label">Stats</span>
+        </button>
+    </nav>
+</div>
+
+<div id="workoutContainer" class="modalOverlay hiddenView">
+    <div class="statsView"> <!-- Reusing stats view container for full screen -->
+        <header class="statsHeader">
+            <h3>Workouts</h3>
+            <button id="closeWorkout" class="iconBtn">&times;</button>
+        </header>
+        
+        <div class="statsContent">
+            <!-- Add Exercise Section -->
+            <div class="chartSection" style="padding-bottom: 10px;">
+                <h4>Log Exercise</h4>
+                <form id="workoutForm">
+                    <div class="formGroup">
+                        <input type="text" id="exerciseName" class="formControl" placeholder="Exercise Name (e.g. Bench Press)">
+                    </div>
+                    <div class="miniNutrientGrid" style="gap: 10px; margin-bottom: 15px;">
+                        <div class="formGroup" style="margin:0; flex:1;">
+                            <input type="number" id="sets" class="formControl" placeholder="Sets" style="text-align:center;">
+                        </div>
+                        <div class="formGroup" style="margin:0; flex:1;">
+                            <input type="number" id="reps" class="formControl" placeholder="Reps" style="text-align:center;">
+                        </div>
+                        <div class="formGroup" style="margin:0; flex:1;">
+                            <input type="number" id="weight" class="formControl" placeholder="kg" style="text-align:center;">
+                        </div>
+                    </div>
+                    <button type="submit" class="submitBtn" style="padding: 10px;">Add Set</button>
+                </form>
+            </div>
+
+            <!-- Today's Workout List -->
+            <div class="sectionHeader">
+                <h3>Today's Log</h3>
+            </div>
+            <ul id="workoutList" class="mealList">
+                <!-- Placeholder Data -->
+                <li class="mealItem">
+                    <div class="mealInfo">
+                        <span class="mealName">Squats</span>
+                        <span class="mealTime">3 sets</span>
+                    </div>
+                    <span class="mealCals">100kg x 5</span>
+                </li>
+                <li class="mealItem">
+                    <div class="mealInfo">
+                        <span class="mealName">Bench Press</span>
+                        <span class="mealTime">4 sets</span>
+                    </div>
+                    <span class="mealCals">80kg x 8</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div id="modalNutrients" class="modalOverlay hiddenView">
+    <div class="nutrientModal">
+        <h3>Today's Nutrients</h3>
+        <div class="nutrientGrid">
+            <div class="nutrientItem">
+                <span class="nutrientLabel">Calories</span>
+                <span class="nutrientValue" id="valCalories">0</span>
+                <span class="nutrientUnit">kcal</span>
+            </div>
+            <div class="nutrientItem">
+                <span class="nutrientLabel">Protein</span>
+                <span class="nutrientValue" id="valProtein">0</span>
+                <span class="nutrientUnit">g</span>
+            </div>
+            <div class="nutrientItem">
+                <span class="nutrientLabel">Carbs</span>
+                <span class="nutrientValue" id="valCarbs">0</span>
+                <span class="nutrientUnit">g</span>
+            </div>
+            <div class="nutrientItem">
+                <span class="nutrientLabel">Fat</span>
+                <span class="nutrientValue" id="valFat">0</span>
+                <span class="nutrientUnit">g</span>
+            </div>
+            <div class="nutrientItem">
+                <span class="nutrientLabel">Fiber</span>
+                <span class="nutrientValue" id="valFiber">0</span>
+                <span class="nutrientUnit">g</span>
+            </div>
+        </div>
+        <button id="closeNutrients" class="closeBtn">Close</button>
+    </div>
+</div>
+
+<div id="addMeal" class="modalOverlay hiddenView">
+    <div class="nutrientModal"> <!-- Reusing container style -->
+        <h3>Add Meal</h3>
+        
+        <form id="addMealForm" class="mealForm">
+            <div class="formGroup">
+                <label for="foodSearch">Select Food</label>
+                <div class="searchWrapper">
+                    <input type="text" id="foodSearch" class="formControl" placeholder="Search food..." autocomplete="off">
+                    <button type="button" id="clearSearch" class="clearSearchBtn hiddenView">&times;</button>
+                </div>
+                <div id="foodList" class="foodListContainer"></div>
+                <input type="hidden" id="selectedFood">
+            </div>
+
+            <div class="nutritionLogSection">
+                <h4>Nutrition per 100g</h4>
+                <div class="miniNutrientGrid">
+                    <div class="miniItem"><span class="lbl">Cal</span><span class="val" id="infoCal">-</span></div>
+                    <div class="miniItem"><span class="lbl">Pro</span><span class="val" id="infoPro">-</span></div>
+                    <div class="miniItem"><span class="lbl">Carb</span><span class="val" id="infoCarb">-</span></div>
+                    <div class="miniItem"><span class="lbl">Fat</span><span class="val" id="infoFat">-</span></div>
+                </div>
+            </div>
+
+            <div class="formGroup">
+                <label for="foodQuantity">Quantity (grams)</label>
+                <div class="qtyStepper">
+                    <button type="button" id="qtyDec" class="stepperBtn minus">&minus;</button>
+                    <input type="number" id="foodQuantity" class="formControl stepperInput" value="100" min="0">
+                    <button type="button" id="qtyInc" class="stepperBtn plus">&plus;</button>
+                </div>
+            </div>
+
+            <button type="submit" class="submitBtn">Add Meal</button>
+            <button type="button" id="closeAddMeal" class="closeBtn secondaryBtn">Cancel</button>
+        </form>
+    </div>
+</div>
+
+<div id="statsContainer" class="modalOverlay hiddenView">
+    <div class="statsView">
+        <header class="statsHeader">
+            <h3>Statistics</h3>
+            <button id="closeStats" class="iconBtn">&times;</button>
+        </header>
+        
+        <div class="statsTabs">
+            <button class="tabBtn active" data-tab="weekly">Weekly</button>
+            <button class="tabBtn" data-tab="monthly">Monthly</button>
+        </div>
+
+        <div class="statsContent">
+            <!-- Charts Section -->
+            <div class="chartSection">
+                <h4>Nutrient Trends</h4>
+                <div class="chartPlaceholder">
+                    <!-- Placeholder for Chart.js or similar -->
+                    <div class="bar" style="height: 60%"></div>
+                    <div class="bar" style="height: 80%"></div>
+                    <div class="bar" style="height: 40%"></div>
+                    <div class="bar" style="height: 90%"></div>
+                    <div class="bar" style="height: 50%"></div>
+                    <div class="bar" style="height: 70%"></div>
+                    <div class="bar" style="height: 30%"></div>
+                </div>
+            </div>
+
+            <!-- Averages Table -->
+            <div class="avgSection">
+                <h4>Average Intake</h4>
+                <table class="avgTable">
+                    <thead>
+                        <tr>
+                            <th>Nutrient</th>
+                            <th>Avg</th>
+                            <th>Goal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Calories</td>
+                            <td>2,100</td>
+                            <td>2,500</td>
+                        </tr>
+                        <tr>
+                            <td>Protein</td>
+                            <td>140g</td>
+                            <td>180g</td>
+                        </tr>
+                        <tr>
+                            <td>Carbs</td>
+                            <td>250g</td>
+                            <td>300g</td>
+                        </tr>
+                        <tr>
+                            <td>Fat</td>
+                            <td>65g</td>
+                            <td>80g</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../static/js/script.js"></script>
 </body>
 </html>
